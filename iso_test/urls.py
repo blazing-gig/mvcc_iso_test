@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from sample import views
+from part_1.views import SampleView
+from part_2.views import BookView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sample/', views.SampleView.as_view()),
-    path('book/', views.BookView.as_view())
+    path('part_1/', SampleView.as_view()),
+    path('book/', BookView.as_view())
 ]

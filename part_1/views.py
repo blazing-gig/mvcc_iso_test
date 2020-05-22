@@ -3,7 +3,7 @@ from django.db.models import F
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Sample, Sample_1, Book, Account
+from .models import Account
 import time
 # Create your views here.
 
@@ -34,11 +34,11 @@ class SampleView(APIView):
     #
     #     return Response(data = {"num": s.num, "num_2": s.num_2})
 
-    def get(self, request):
-        with transaction.atomic():
-            s = Sample.objects.get(id = 1)
-            s1 = Sample_1.objects.get(id = 1)
-        return Response(data = {"num": s.num, "balance": s1.balance})
+    # def get(self, request):
+    #     with transaction.atomic():
+    #         s = Sample.objects.get(id = 1)
+    #         s1 = Sample_1.objects.get(id = 1)
+    #     return Response(data = {"num": s.num, "balance": s1.balance})
 
     def put(self, request):
         with transaction.atomic():
@@ -126,27 +126,7 @@ class SampleView(APIView):
     #
     #     return Response({})
 
-class BookView(APIView):
-    def put(self, request):
-        with transaction.atomic():
-            author_1 = request.query_params["author_1"]
-            Book.objects.filter(author = author_1).update(count = F('count') + 1)
 
-            author_2 = request.query_params["author_2"]
-            Book.objects.filter(author = author_2).update(count = F('count') + 1)
-
-        return Response({})
-
-    def post(self, request):
-        with transaction.atomic():
-            author = request.query_params["author_1"]
-            count = 16
-
-            Book.objects.filter(
-                author = author, count = count
-            ).update(count = F('count') - 1)
-
-        return Response({})
 
 
 
