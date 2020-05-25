@@ -1,17 +1,29 @@
 
-FROM python:3.7
+FROM python:3.7-slim AS builder
 
-RUN mkdir /code
+RUN apt-get update
 
-WORKDIR /code
+RUN apt-get install -y libpq-dev && apt-get -y install gcc
 
-COPY . .
+ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN python -m venv venv
+COPY ./requirements.txt .
 
-RUN source venv/bin/activate
+RUN python -m venv /opt/venv
+
+ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip install -r requirements.txt
 
+RUN pip freeze
 
+## multi stage build
+FROM python:3.7-alpine
+
+RUN apk add --update --no-cache libpq
+
+WORKDIR /code
+COPY --from=builder /opt/venv /opt/venv
+
+COPY . .
 
